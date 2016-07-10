@@ -1,41 +1,40 @@
 package com.packt.webstore.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.packt.webstore.domain.User;
+import com.packt.webstore.service.UserService;
 
 @Controller
 @RequestMapping(value = "rest1")
 public class RESTContoller1 {
 	
-	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<Test> test(HttpServletRequest request){
-		List<Test> listOfTest = new ArrayList<>();
-		List<Integer> listOfInteger = new ArrayList<>();
-		List<Integer> listOfInteger1 = new ArrayList<>();
-		Test test = new Test();
-		
-		listOfInteger.add(21);
-		listOfInteger.add(21);
-		listOfInteger.add(21);
-		
-		test.setName("tak");
-		test.setListOfInteger(listOfInteger);
-		listOfTest.add(test);
-		Test test1 = new Test();
-		listOfInteger1.add(31);
-		listOfInteger1.add(31);
-		listOfInteger1.add(31);
-		test1.setName("test1");
-		test1.setListOfInteger(listOfInteger1);
-		listOfTest.add(test1);
-		return listOfTest;
+	@Autowired
+	private UserService userService;
+	
+	@RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> test(@RequestBody User user){
+		Map<String, Object> mapForReponse = new HashMap<>();
+		boolean exist = userService.login(user);
+		mapForReponse.put("success", exist);
+		if(exist)
+			mapForReponse.put("user", userService.getUser(user));
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/1", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody User test1(){
+		return new User("name","pass","token");
 	}
 }
