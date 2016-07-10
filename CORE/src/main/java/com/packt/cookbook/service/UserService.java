@@ -1,6 +1,6 @@
-package com.packt.webstore.service;
+package com.packt.cookbook.service;
 
-import com.packt.webstore.domain.User;
+import com.packt.cookbook.domain.User;
 
 public interface UserService {
 	boolean login(User user);

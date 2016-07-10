@@ -1,4 +1,4 @@
-package com.packt.webstore.controller;
+package com.packt.cookbook.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/solr")
 public class SOLRController {
 	
-	@Resource
-	private SolrTemplate solrTemplate;
+	//@Resource
+	//private SolrTemplate solrTemplate;
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> test(HttpServletRequest request){
@@ -28,7 +28,7 @@ public class SOLRController {
 		try {
 			conditions = new Criteria("id").contains("book1");
 			SimpleQuery search = new SimpleQuery(conditions);
-			ScoredPage<Book> result = solrTemplate.queryForPage(search, Book.class);
+			//ScoredPage<Book> result = solrTemplate.queryForPage(search, Book.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

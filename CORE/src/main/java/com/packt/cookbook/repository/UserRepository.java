@@ -1,6 +1,6 @@
-package com.packt.webstore.repository;
+package com.packt.cookbook.repository;
 
-import com.packt.webstore.domain.User;
+import com.packt.cookbook.domain.User;
 
 public interface UserRepository {
 	boolean login(User user);

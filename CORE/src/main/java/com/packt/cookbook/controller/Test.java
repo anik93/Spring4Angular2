@@ -1,4 +1,4 @@
-package com.packt.webstore.controller;
+package com.packt.cookbook.controller;
 
 import java.util.ArrayList;
 import java.util.List;

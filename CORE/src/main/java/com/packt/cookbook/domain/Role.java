@@ -1,4 +1,4 @@
-package com.packt.webstore.domain;
+package com.packt.cookbook.domain;
 
 public class Role {
 	

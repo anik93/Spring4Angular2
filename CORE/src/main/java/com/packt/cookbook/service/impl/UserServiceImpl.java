@@ -1,11 +1,11 @@
-package com.packt.webstore.service.impl;
+package com.packt.cookbook.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.packt.webstore.domain.User;
-import com.packt.webstore.repository.UserRepository;
-import com.packt.webstore.service.UserService;
+import com.packt.cookbook.domain.User;
+import com.packt.cookbook.repository.UserRepository;
+import com.packt.cookbook.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService{

@@ -1,17 +1,22 @@
-package com.packt.webstore.repository.impl;
+package com.packt.cookbook.repository.impl;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.packt.webstore.domain.Role;
-import com.packt.webstore.domain.User;
-import com.packt.webstore.repository.UserRepository;
+import com.packt.cookbook.domain.Role;
+import com.packt.cookbook.domain.User;
+import com.packt.cookbook.repository.UserRepository;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
-
+	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	private Set<User> listOfUser = new HashSet<>();
 	
 	public UserRepositoryImpl() {
