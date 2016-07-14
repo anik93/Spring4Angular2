@@ -14,13 +14,12 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 
 	@Override
-	public boolean login(User user) {
-		return userRepository.login(user);
+	public User login(User login) {
+		return userRepository.login(login);
 	}
 
 	@Override
-	public User getUser(User user) {
-		return userRepository.getUser(user);
+	public Boolean register(User register) {
+		return userRepository.register(register);
 	}
-	
 }

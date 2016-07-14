@@ -1,24 +1,32 @@
 package com.packt.cookbook.domain;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
+	private Integer id_r;
 	
-	private Integer id;
 	private String name;
 	
-	public Role(Integer id, String name) {
-		this.id=id;
-		this.name=name;
+	public Role(){
+		
 	}
-	public Integer getId() {
-		return id;
+	
+	public Integer getId_r() {
+		return id_r;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+
+	public void setId_r(Integer id_r) {
+		this.id_r = id_r;
 	}
+	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 }

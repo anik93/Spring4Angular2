@@ -1,13 +1,14 @@
 package com.packt.cookbook.repository.impl;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.packt.cookbook.domain.Role;
 import com.packt.cookbook.domain.User;
 import com.packt.cookbook.repository.UserRepository;
 
@@ -17,37 +18,49 @@ public class UserRepositoryImpl implements UserRepository{
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	private Set<User> listOfUser = new HashSet<>();
-	
-	public UserRepositoryImpl() {
-		User user = new User("name","pass","token");
-		Set<Role> listOfRole = new HashSet<>();
-		listOfRole.add(new Role(2134,"testRole"));
-		listOfRole.add(new Role(5466,"Roletest"));
-		user.setListOfRole(listOfRole);
-		listOfUser.add(user);
-	}
-	
+	@SuppressWarnings("deprecation")
 	@Override
-	public boolean login(User user) {
-		boolean exist = false;
-		for(User users: listOfUser){
-			if(users.getUserName().equals(user.getUserName()) && users.getPassword().equals(user.getPassword()) && users.getToken().equals(user.getToken())){
-				exist = true;
-				break;
+	@Transactional
+	public User login(User login) {
+		User user = null;
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		@SuppressWarnings("unchecked")
+		List<User> users = (List<User>) session.createQuery("from User").list();
+		for(User x: users){
+			if(x.getName().equals(login.getName()) && x.getPassword().equals(login.getPassword())){
+				user = x;
 			}
 		}
-		return exist;
+		if(user != null && user.getName() != null){
+			user.setToken(UUID.randomUUID().toString());
+			setToken(user);
+		}
+        session.close();
+		return user;
+	}
+	
+	private void setToken(User test){
+		User user = new User();
+		user.setEmail(test.getEmail());
+		user.setId_u(test.getId_u());
+		user.setName(test.getName());
+		user.setPassword(test.getPassword());
+		user.setToken(test.getToken());
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.update(user); 
+		session.getTransaction().commit();
+		session.close();
 	}
 
 	@Override
-	public User getUser(User user) {
-		for(User users: listOfUser){
-			if(users.getUserName().equals(user.getUserName()) && users.getPassword().equals(user.getPassword()) && users.getToken().equals(user.getToken())){
-				return users;
-			}
-		}
-		return new User();
+	public Boolean register(User register) {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.save(register); 
+		session.getTransaction().commit();
+		session.close();
+		return true;
 	}
-
 }

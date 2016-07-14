@@ -3,7 +3,7 @@ package com.packt.cookbook.repository;
 import com.packt.cookbook.domain.User;
 
 public interface UserRepository {
-	boolean login(User user);
+	User login(User login);
 
-	User getUser(User user);
+	Boolean register(User register);
 }
