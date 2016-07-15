@@ -22,4 +22,9 @@ public class UserServiceImpl implements UserService{
 	public Boolean register(User register) {
 		return userRepository.register(register);
 	}
+
+	@Override
+	public Boolean logout(User logout) {
+		return userRepository.logout(logout);
+	}
 }

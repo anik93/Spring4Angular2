@@ -1,6 +1,7 @@
 package com.packt.cookbook.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,10 @@ public class User implements Serializable{
 	private String email;
 	
 	private String token;
+	
+	private Boolean login;
+	
+	private LocalDateTime timeToken;
 	
 	private Set<Role> listOfRole = new HashSet<>();
 	
@@ -68,6 +73,22 @@ public class User implements Serializable{
 
 	public void setListOfRole(Set<Role> listOfRole) {
 		this.listOfRole = listOfRole;
+	}
+
+	public Boolean getLogin() {
+		return login;
+	}
+
+	public void setLogin(Boolean login) {
+		this.login = login;
+	}
+
+	public LocalDateTime getTimeToken() {
+		return timeToken;
+	}
+
+	public void setTimeToken(LocalDateTime timeToken) {
+		this.timeToken = timeToken;
 	}
 	
 }
