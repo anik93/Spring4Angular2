@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  	   xmlns:solr="http://www.springframework.org/schema/data/solr"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -8,15 +9,64 @@
 						   http://www.springframework.org/schema/context
 						   http://www.springframework.org/schema/context/spring-context.xsd
 						   http://www.springframework.org/schema/mvc
-						   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+						   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						   http://www.springframework.org/schema/data/solr
+					       http://www.springframework.org/schema/data/solr/spring-solr.xsd">
 	
 	<mvc:annotation-driven/>
 	
-	<context:component-scan base-package="com.packt.webstore" />
+	<context:component-scan base-package="com.packt.cookbook" />
 	
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
+	<solr:solr-client id="solrClient" url="http://localhost:8983/solr/#/demo/query"/>
+	
+	<bean id="solrTemplate" class="org.springframework.data.solr.core.SolrTemplate">
+		<constructor-arg ref="solrClient" />
+	</bean>
+	
+	<mvc:cors>
+		<mvc:mapping path="/**" />
+	</mvc:cors>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/cookbook" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+	
+	<bean id="SessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>  
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>/orm/User.hbm.xml</value>
+				<value>/orm/Role.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="test" />
+        <property name="password" value="test" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
 </beans>
