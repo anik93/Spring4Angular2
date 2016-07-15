@@ -6,4 +6,6 @@ public interface UserRepository {
 	User login(User login);
 
 	Boolean register(User register);
+
+	Boolean logout(User logout);
 }

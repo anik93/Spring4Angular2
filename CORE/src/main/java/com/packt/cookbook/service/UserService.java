@@ -6,4 +6,6 @@ public interface UserService {
 	User login(User login);
 
 	Boolean register(User register);
+	
+	Boolean logout(User logout);
 }

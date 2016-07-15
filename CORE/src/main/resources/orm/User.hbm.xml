@@ -24,17 +24,17 @@
         </property>
         
         <property name="token" type="string">
-            <column name="token" length="255" not-null="true" />
+            <column name="token" length="255" />
+        </property>
+        
+        <property name="login" type="boolean">
+            <column name="login" />
+        </property>
+        
+        <property name="timeToken" type="LocalDateTime">
+            <column name="timeToken" />
         </property>
      
-     	<!-- set name="listOfRole" table="user_role" inverse="false" lazy="false" fetch="select" cascade="all" >
-            <key>
-                <column name="id_u" not-null="true" />
-            </key>
-            <many-to-many entity-name="com.packt.cookbook.domain.Role">
-                <column name="id_r" not-null="true" />
-            </many-to-many>
-        </set-->
         <set name="listOfRole" table="user_role"  inverse="true" lazy="false" fetch="select" cascade="all">
             <key>
                 <column name="id_u" not-null="true" />
