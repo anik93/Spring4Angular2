@@ -2,11 +2,11 @@ package com.packt.cookbook.repository.impl;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateError;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -26,42 +26,16 @@ public class UserRepositoryImpl implements UserRepository{
 	
 	private static final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public User login(User login) {
-		User user = null;
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		Criteria cr = session.createCriteria(User.class);
-		cr.add(Restrictions.eq("name", login.getName()));
-		cr.add(Restrictions.eq("password", login.getPassword()));
-		List<User> listOfUser = cr.list();
-		if(!listOfUser.isEmpty()){
-			user = listOfUser.get(0);
+		User user = getUser(login);
+		if(user != null){
 			user.setToken(UUID.randomUUID().toString());
-			LocalDateTime now = LocalDateTime.now();
-			user.setTimeToken(now);
+			user.setTimeToken(LocalDateTime.now());
 			user.setLogin(true);
-			saveToken(user);
+			updateUser(user);
 		}
-        session.close();
 		return user;
-	}
-	
-	private void saveToken(User test){
-		User user = new User();
-		user.setEmail(test.getEmail());
-		user.setId_u(test.getId_u());
-		user.setName(test.getName());
-		user.setPassword(test.getPassword());
-		user.setToken(test.getToken());
-		user.setTimeToken(test.getTimeToken());
-		user.setLogin(test.getLogin());
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		session.update(user); 
-		session.getTransaction().commit();
-		session.close();
 	}
 
 	@Override
@@ -82,32 +56,63 @@ public class UserRepositoryImpl implements UserRepository{
 		return false;
 	}
 	
-	private Boolean validToken(User userToken) {
-		User user = null;
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		@SuppressWarnings("deprecation")
-		Criteria cr = session.createCriteria(User.class);
-		cr.add(Restrictions.eq("name", userToken.getName()));
-		cr.add(Restrictions.eq("password", userToken.getPassword()));
-		List<User> listOfUser = cr.list();
-		if(!listOfUser.isEmpty()){
-			user = listOfUser.get(0);
-			LocalDateTime now = LocalDateTime.now();
-			if(userToken.getToken().equals(user.getToken()) && ChronoUnit.HOURS.between(user.getTimeToken(), now)<=2){
-				user.setToken(UUID.randomUUID().toString());
-				saveToken(user);
-				return true;
-			}	
-		} 
+	@Override
+	public Boolean logout(User logout) {
+		User user = getUser(logout);
+		if(user != null && user.getToken() != null){
+			user.setTimeToken(null);
+			user.setToken(null);
+			user.setLogin(false);
+			updateUser(user);
+			return true;
+		}
 		return false;
 	}
 	
-	@Override
-	public Boolean logout(User logout) {
-		logout.setTimeToken(null);
-		logout.setLogin(false);
-		saveToken(logout);
-		return true;
+	@SuppressWarnings("unchecked")
+	private User getUser(User userToFind){
+		User user = null;
+		Session session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria cr = session.createCriteria(User.class);
+		List<User> listOfUser = new ArrayList<>(0);
+		if(userToFind.getName() != null && userToFind.getPassword() != null){
+			cr.add(Restrictions.eq("name", userToFind.getName()));
+			cr.add(Restrictions.eq("password", userToFind.getPassword()));		
+		} else if(userToFind.getToken() != null){
+			cr.add(Restrictions.eq("token", userToFind.getToken()));
+		}
+		listOfUser = cr.list();
+		if(!listOfUser.isEmpty())
+			user = listOfUser.get(0);
+		return user;
+	}
+	
+	private void updateUser(User test){
+		User user = new User();
+		user.setId_u(test.getId_u());
+		user.setName(test.getName());
+		user.setPassword(test.getPassword());
+		user.setEmail(test.getEmail());			
+		user.setToken(test.getToken());
+		user.setLogin(test.getLogin());
+		user.setTimeToken(test.getTimeToken());		
+		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.update(user); 
+		session.getTransaction().commit();
+		session.close();
+	}
+	
+	@SuppressWarnings("unused")
+	private Boolean validToken(User userToken) {
+		User user = getUser(userToken);
+		if(user != null && userToken.getToken().equals(user.getToken()) && ChronoUnit.HOURS.between(user.getTimeToken(), LocalDateTime.now())<=2){
+			user.setTimeToken(LocalDateTime.now());
+			updateUser(user);
+			return true;
+		}
+		return false;
 	}
 }

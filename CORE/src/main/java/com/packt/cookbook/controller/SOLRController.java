@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+@SuppressWarnings({ "unused", "deprecation" })
 @RestController
 @RequestMapping(value = "/solr")
 public class SOLRController {
@@ -29,6 +30,7 @@ public class SOLRController {
 	//@Resource
 	//private SolrTemplate solrTemplate;
 	
+	@SuppressWarnings({ "resource" })
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> test(HttpServletRequest request){
 		//String[] words = {"book1"};
