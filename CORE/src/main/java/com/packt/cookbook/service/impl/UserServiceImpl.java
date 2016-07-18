@@ -27,4 +27,19 @@ public class UserServiceImpl implements UserService{
 	public Boolean logout(User logout) {
 		return userRepository.logout(logout);
 	}
+
+	@Override
+	public User getUser(User userToFind) {
+		return userRepository.getUser(userToFind);
+	}
+
+	@Override
+	public Boolean updateUser(User test) {
+		return userRepository.updateUser(test);
+	}
+
+	@Override
+	public Boolean validToken(User userToken) {
+		return userRepository.validToken(userToken);
+	}
 }
