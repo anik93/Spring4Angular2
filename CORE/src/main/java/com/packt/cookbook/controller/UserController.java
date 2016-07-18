@@ -30,7 +30,7 @@ public class UserController {
 	@RequestMapping(value = "login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User login){
 		Map<String, Object> mapForReponse = new HashMap<>();
-		if(login.getName()!=null || login.getPassword()!=null){
+		if(login.getName() != null && login.getPassword() !=null ){
 			User user = userService.login(login);
 			
 			if(user != null){
@@ -77,8 +77,10 @@ public class UserController {
 	@RequestMapping(value = "logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> logout(@RequestBody User logout){
 		Map<String, Object> mapForReponse = new HashMap<>();
-		mapForReponse.put("success", userService.logout(logout));
-		
+		if(logout.getName() != null && logout.getToken() != null)
+			mapForReponse.put("success", userService.logout(logout));
+		else
+			mapForReponse.put("success", false);
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	

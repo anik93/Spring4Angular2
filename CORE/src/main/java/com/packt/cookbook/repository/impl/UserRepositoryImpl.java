@@ -59,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository{
 	@Override
 	public Boolean logout(User logout) {
 		User user = getUser(logout);
-		if(user != null && user.getToken() != null){
+		if(user != null && user.getToken() != null && user.getToken().equals(logout.getToken())){
 			user.setTimeToken(null);
 			user.setToken(null);
 			user.setLogin(false);
