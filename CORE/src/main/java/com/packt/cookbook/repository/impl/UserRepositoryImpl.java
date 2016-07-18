@@ -59,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository{
 	@Override
 	public Boolean logout(User logout) {
 		User user = getUser(logout);
-		if(user != null && user.getToken() != null){
+		if(user != null && user.getToken() != null && user.getToken().equals(logout.getToken())){
 			user.setTimeToken(null);
 			user.setToken(null);
 			user.setLogin(false);
@@ -69,26 +69,31 @@ public class UserRepositoryImpl implements UserRepository{
 		return false;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private User getUser(User userToFind){
+	public User getUser(User userToFind){
 		User user = null;
 		Session session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria cr = session.createCriteria(User.class);
 		List<User> listOfUser = new ArrayList<>(0);
-		if(userToFind.getName() != null && userToFind.getPassword() != null){
+		if(userToFind.getName() != null && userToFind.getPassword() != null){ //logowanie
 			cr.add(Restrictions.eq("name", userToFind.getName()));
 			cr.add(Restrictions.eq("password", userToFind.getPassword()));		
+		} else if(userToFind.getId_u() != null && userToFind.getName() != null){
+			cr.add(Restrictions.eq("name", userToFind.getName()));
+			cr.add(Restrictions.eq("id_u", userToFind.getId_u()));		
 		} else if(userToFind.getToken() != null){
 			cr.add(Restrictions.eq("token", userToFind.getToken()));
-		}
+		} 
 		listOfUser = cr.list();
 		if(!listOfUser.isEmpty())
 			user = listOfUser.get(0);
 		return user;
 	}
 	
-	private void updateUser(User test){
+	@Override
+	public Boolean updateUser(User test){
 		User user = new User();
 		user.setId_u(test.getId_u());
 		user.setName(test.getName());
@@ -97,16 +102,24 @@ public class UserRepositoryImpl implements UserRepository{
 		user.setToken(test.getToken());
 		user.setLogin(test.getLogin());
 		user.setTimeToken(test.getTimeToken());		
-		
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		session.update(user); 
-		session.getTransaction().commit();
-		session.close();
+		Session session = null;
+		try{
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(user); 
+			session.getTransaction().commit();
+			return true;
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			log.error("Error when update user", e);
+		} finally {
+			session.close();
+		}
+		return false;
 	}
 	
-	@SuppressWarnings("unused")
-	private Boolean validToken(User userToken) {
+	@Override
+	public Boolean validToken(User userToken) {
 		User user = getUser(userToken);
 		if(user != null && userToken.getToken().equals(user.getToken()) && ChronoUnit.HOURS.between(user.getTimeToken(), LocalDateTime.now())<=2){
 			user.setTimeToken(LocalDateTime.now());
