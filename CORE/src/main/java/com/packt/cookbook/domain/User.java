@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class User implements Serializable{
 
@@ -13,6 +14,7 @@ public class User implements Serializable{
 	
 	private String name;
 	
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String password;
 	
 	private String email;
@@ -21,6 +23,7 @@ public class User implements Serializable{
 	
 	private Boolean login;
 	
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private LocalDateTime timeToken;
 	
 	private Set<Role> listOfRole = new HashSet<>();

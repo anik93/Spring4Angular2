@@ -29,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository{
 	@Override
 	public User login(User login) {
 		User user = getUser(login);
-		if(user != null){
+		if(user != null && !validToken(user)){
 			user.setToken(UUID.randomUUID().toString());
 			user.setTimeToken(LocalDateTime.now());
 			user.setLogin(true);
@@ -39,7 +39,7 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public Boolean register(User register) {
+	public boolean register(User register) {
 		Session session = null;
 		try{
 			session = sessionFactory.openSession();
@@ -57,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 	
 	@Override
-	public Boolean logout(User logout) {
+	public boolean logout(User logout) {
 		User user = getUser(logout);
 		if(user != null && user.getToken() != null && user.getToken().equals(logout.getToken())){
 			user.setTimeToken(null);
@@ -85,7 +85,9 @@ public class UserRepositoryImpl implements UserRepository{
 			cr.add(Restrictions.eq("id_u", userToFind.getId_u()));		
 		} else if(userToFind.getToken() != null){
 			cr.add(Restrictions.eq("token", userToFind.getToken()));
-		} 
+		} else if(userToFind.getEmail() != null){
+			cr.add(Restrictions.eq("email", userToFind.getEmail()));
+		}
 		listOfUser = cr.list();
 		if(!listOfUser.isEmpty())
 			user = listOfUser.get(0);
@@ -93,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 	
 	@Override
-	public Boolean updateUser(User test){
+	public boolean updateUser(User test){
 		User user = new User();
 		user.setId_u(test.getId_u());
 		user.setName(test.getName());
@@ -119,13 +121,23 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 	
 	@Override
-	public Boolean validToken(User userToken) {
+	public boolean validToken(User userToken) {
 		User user = getUser(userToken);
 		if(user != null && userToken.getToken().equals(user.getToken()) && ChronoUnit.HOURS.between(user.getTimeToken(), LocalDateTime.now())<=2){
 			user.setTimeToken(LocalDateTime.now());
 			updateUser(user);
 			return true;
+		} else {
+			user.setTimeToken(null);
+			user.setToken(null);
+			user.setLogin(false);
+			updateUser(user);
+			return false;
 		}
+	}
+
+	@Override
+	public boolean restartPassword(String email) {
 		return false;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.packt.cookbook.domain.User;
+import com.packt.cookbook.service.MailService;
 import com.packt.cookbook.service.UserService;
 
 @Controller
@@ -27,10 +29,13 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private MailService mailService;
+	
 	@RequestMapping(value = "login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> login(@RequestBody User login){
 		Map<String, Object> mapForReponse = new HashMap<>();
-		if(login.getName() != null && login.getPassword() !=null ){
+		if(login.getName() != null && login.getPassword() !=null){
 			User user = userService.login(login);
 			
 			if(user != null){
@@ -93,18 +98,20 @@ public class UserController {
 			user1.setPassword(null);
 			user1.setTimeToken(null);
 			mapForReponse.put("user", user1);
-			mapForReponse.put("access", true);
+			mapForReponse.put("access", true);			
 		} else {
 			mapForReponse.put("success", true);
 			mapForReponse.put("access", false);
 		}
-		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+		HttpHeaders heders = new HttpHeaders();
+		heders.add(HttpHeaders.COOKIE, "testcookie");
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, heders, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> updateUser(@RequestBody User update){
 		Map<String, Object> mapForReponse = new HashMap<>();
-		if(update.getName()==null){
+		if(update != null && update.getName()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty name");
 		} else if(update.getPassword()==null){
@@ -114,15 +121,45 @@ public class UserController {
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty email");
 		} else {
-			boolean success = userService.updateUser(update);
-			if(success)
-				mapForReponse.put("success", success);
-			else {
-				mapForReponse.put("success", success);
-				mapForReponse.put("error", "user exist");
+			User user = new User();
+			user.setToken(update.getToken());
+			user = userService.getUser(user);
+			if(user != null && userService.validToken(user)){
+				boolean success = userService.updateUser(update);
+				if(success)
+					mapForReponse.put("success", success);
+				else {
+					mapForReponse.put("success", success);
+					mapForReponse.put("error", "user exist");
+				}
+			} else {
+				mapForReponse.put("success", false);
+				mapForReponse.put("access", false);
 			}
 		}
 		
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> restartPassword(@RequestBody User password){
+		Map<String, Object> mapForReponse = new HashMap<>();
+		if(password != null && password.getEmail()!=null){
+			if(userService.restartPassword(password.getEmail())){
+				User user = userService.getUser(password);
+				Runnable task = () -> {
+					mailService.restartPassword(user.getEmail());
+				};
+				Thread thread = new Thread(task);
+				thread.start();
+				mapForReponse.put("success", true);
+			} else {
+				mapForReponse.put("success", false);
+				mapForReponse.put("error", "email not exist");
+			}
+		} else {
+			mapForReponse.put("success", false);
+		}
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 }
