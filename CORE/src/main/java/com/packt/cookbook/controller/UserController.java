@@ -94,7 +94,7 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> getUser(@RequestBody User user){
 		Map<String, Object> mapForReponse = new HashMap<>();
 		User user1 = userService.getUser(user);
-		if(user1 != null && user1.getToken() == user.getToken() && user1.getLogin() && userService.validToken(user1)){
+		if(user1 != null && user1.getToken().equals(user.getToken()) && user1.getLogin() && userService.validToken(user1)){
 			mapForReponse.put("success", true);
 			user1.setPassword(null);
 			user1.setTimeToken(null);
