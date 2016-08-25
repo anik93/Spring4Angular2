@@ -30,7 +30,12 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public void registration(String toAddress, String name) {
-		
+		crunchifyMsg = new SimpleMailMessage();
+		crunchifyMsg.setFrom("mycookbook@gmail.com");
+		crunchifyMsg.setTo(toAddress);
+		crunchifyMsg.setSubject("Welcome in Cook Book");
+		crunchifyMsg.setText("Hello " + name);
+		mailSender.send(crunchifyMsg);
 	}
 
 }

@@ -17,6 +17,7 @@ public class User implements Serializable{
 	
 	private String name;
 	
+	@SuppressWarnings("deprecation")
 	@Length(min=8)
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String password;
@@ -27,6 +28,7 @@ public class User implements Serializable{
 	
 	private Boolean login;
 	
+	@SuppressWarnings("deprecation")
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private LocalDateTime timeToken;
 	

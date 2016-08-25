@@ -68,9 +68,14 @@ public class UserController {
 			mapForReponse.put("error", "empty email");			
 		} else {
 			boolean success = userService.register(register);
-			if(success)
+			if(success){
 				mapForReponse.put("success", success);
-			else {
+				Runnable task = () -> {
+					mailService.registration(register.getEmail(), register.getName());
+				};
+				Thread thread = new Thread(task);
+				thread.start();
+			} else {
 				mapForReponse.put("success", success);
 				mapForReponse.put("error", "user exist");
 			}
@@ -124,17 +129,26 @@ public class UserController {
 			User user = new User();
 			user.setToken(update.getToken());
 			user = userService.getUser(user);
-			if(user != null && userService.validToken(user)){
+			boolean token = userService.validToken(user);
+			if(user != null && token){
 				boolean success = userService.updateUser(update);
 				if(success)
 					mapForReponse.put("success", success);
 				else {
+					mapForReponse.put("access", false);
 					mapForReponse.put("success", success);
-					mapForReponse.put("error", "user exist");
+					mapForReponse.put("error", "not save");
 				}
 			} else {
-				mapForReponse.put("success", false);
-				mapForReponse.put("access", false);
+				if(!token){
+					mapForReponse.put("success", false);
+					mapForReponse.put("access", false);
+					mapForReponse.put("error", "token expired");
+				} else {
+					mapForReponse.put("success", true);
+					mapForReponse.put("access", false);
+					mapForReponse.put("error", "user not exist");
+				}
 			}
 		}
 		
@@ -161,6 +175,7 @@ public class UserController {
 		} else {
 			mapForReponse.put("access", false);
 			mapForReponse.put("success", false);
+			mapForReponse.put("error", "empty emial");
 		}
 		
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
