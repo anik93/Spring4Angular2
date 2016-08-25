@@ -15,5 +15,5 @@ public interface UserRepository {
 
 	boolean validToken(User userToken);
 
-	boolean restartPassword(String email);
+	boolean restartPassword(User user);
 }

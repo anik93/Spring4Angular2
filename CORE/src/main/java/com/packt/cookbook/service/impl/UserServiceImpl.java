@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean restartPassword(String email) {
-		return userRepository.restartPassword(email);
+	public boolean restartPassword(User user) {
+		return userRepository.restartPassword(user);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -137,7 +138,11 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public boolean restartPassword(String email) {
-		return false;
+	public boolean restartPassword(User user) {
+		user.setPassword(RandomStringUtils.random(10));
+		if(updateUser(user))
+			return true;
+		else
+			return false;
 	}
 }

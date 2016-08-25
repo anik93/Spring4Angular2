@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +50,7 @@ public class UserController {
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty");
 		}
+		
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
@@ -86,6 +86,7 @@ public class UserController {
 			mapForReponse.put("success", userService.logout(logout));
 		else
 			mapForReponse.put("success", false);
+		
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
@@ -103,9 +104,8 @@ public class UserController {
 			mapForReponse.put("success", true);
 			mapForReponse.put("access", false);
 		}
-		HttpHeaders heders = new HttpHeaders();
-		heders.add(HttpHeaders.COOKIE, "testcookie");
-		return new ResponseEntity<Map<String, Object>>(mapForReponse, heders, HttpStatus.OK);
+		
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -145,10 +145,11 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> restartPassword(@RequestBody User password){
 		Map<String, Object> mapForReponse = new HashMap<>();
 		if(password != null && password.getEmail()!=null){
-			if(userService.restartPassword(password.getEmail())){
-				User user = userService.getUser(password);
+			mapForReponse.put("access", true);
+			User user = userService.getUser(password);
+			if(user != null && userService.restartPassword(user)){
 				Runnable task = () -> {
-					mailService.restartPassword(user.getEmail());
+					mailService.restartPassword(user);
 				};
 				Thread thread = new Thread(task);
 				thread.start();
@@ -158,8 +159,10 @@ public class UserController {
 				mapForReponse.put("error", "email not exist");
 			}
 		} else {
+			mapForReponse.put("access", false);
 			mapForReponse.put("success", false);
 		}
+		
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 }

@@ -1,6 +1,8 @@
 package com.packt.cookbook.service;
 
+import com.packt.cookbook.domain.User;
+
 public interface MailService {
-	Boolean restartPassword(String email);
+	void restartPassword(User user);
 	void registration(String toAddress, String name);
 }

@@ -6,14 +6,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import com.packt.cookbook.domain.User;
-import com.packt.cookbook.repository.UserRepository;
 import com.packt.cookbook.service.MailService;
 
 @Service
 public class MailServiceImpl implements MailService{
-
-	@Autowired
-	private UserRepository userRepository;
 	
 	@Autowired
 	private MailSender mailSender;
@@ -21,20 +17,15 @@ public class MailServiceImpl implements MailService{
 	private SimpleMailMessage crunchifyMsg;
 	
 	@Override
-	public Boolean restartPassword(String email) {
-		User user = new User();
-		user.setEmail(email);
-		user = userRepository.getUser(user);
+	public void restartPassword(User user) {
 		if(user != null){
 			crunchifyMsg = new SimpleMailMessage();
 			crunchifyMsg.setFrom("mycookbook@gmail.com");
-			crunchifyMsg.setTo(email);
+			crunchifyMsg.setTo(user.getEmail());
 			crunchifyMsg.setSubject("Restart Password");
-			crunchifyMsg.setText("Restart Password");
+			crunchifyMsg.setText("New password is " + user.getPassword());
 			mailSender.send(crunchifyMsg);
-			return true;
-		} else 
-			return false;
+		}
 	}
 
 	@Override

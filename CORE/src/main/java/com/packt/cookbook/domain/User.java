@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class User implements Serializable{
@@ -14,6 +17,7 @@ public class User implements Serializable{
 	
 	private String name;
 	
+	@Length(min=8)
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String password;
 	
