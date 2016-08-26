@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class User implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1572102918105879025L;
 
 	private Integer id_u;
 	

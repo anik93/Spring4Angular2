@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepository{
 	@Override
 	public User login(User login) {
 		User user = getUser(login);
-		if(user != null && !validToken(user)){
+		if(user != null){
 			user.setToken(UUID.randomUUID().toString());
 			user.setTimeToken(LocalDateTime.now());
 			user.setLogin(true);
@@ -92,6 +92,7 @@ public class UserRepositoryImpl implements UserRepository{
 		listOfUser = cr.list();
 		if(!listOfUser.isEmpty())
 			user = listOfUser.get(0);
+		session.close();
 		return user;
 	}
 	
@@ -105,12 +106,14 @@ public class UserRepositoryImpl implements UserRepository{
 		user.setToken(test.getToken());
 		user.setLogin(test.getLogin());
 		user.setTimeToken(test.getTimeToken());		
+		user.setListOfRole(test.getListOfRole());
 		Session session = null;
-		try{
+		try{			
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			session.update(user); 
 			session.getTransaction().commit();
+			session.close();
 			return true;
 		}catch(Exception e){
 			session.getTransaction().rollback();

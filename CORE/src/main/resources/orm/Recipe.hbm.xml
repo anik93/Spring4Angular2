@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.packt.cookbook.domain">
+
+    <class name="Recipe" table="recipe">
+    
+        <id name="id_re" type="java.lang.Integer">
+            <column name="id_re" />
+            <generator class="identity" />
+        </id>
+        
+        <property name="name" type="string">
+            <column name="name" length="255" not-null="true" />
+        </property>
+
+		<property name="time" type="java.lang.Integer">
+            <column name="time" not-null="true" />
+        </property>
+        
+        <property name="level" type="string">
+            <column name="level" length="255" not-null="true" />
+        </property>
+        
+        <property name="rating" type="float">
+            <column name="rating" not-null="false"/>
+        </property>
+        
+        <property name="linkPhoto" type="string">
+            <column name="linkPhoto" length="255" not-null="true" />
+        </property>
+        
+        <set name="listOfSection" table="section" lazy="false" fetch="select" cascade="all">
+            <key>
+                <column name="id_re" not-null="true" />
+            </key>
+            <one-to-many class="Section" />
+        </set>
+        
+        <!--set name="listOfProducts" table="recipe_product" lazy="false" fetch="select" cascade="all">
+            <key>
+                <column name="id_re" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.packt.cookbook.domain.Product">
+                <column name="id_p" not-null="true" />
+            </many-to-many>
+        </set-->
+    </class>
+    
+</hibernate-mapping>

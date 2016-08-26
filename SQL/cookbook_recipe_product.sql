@@ -16,27 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `role`
+-- Table structure for table `recipe_product`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `recipe_product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role` (
-  `id_r` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_r`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+CREATE TABLE `recipe_product` (
+  `id_re` int(11) NOT NULL,
+  `id_p` int(11) NOT NULL,
+  KEY `id_p_idx` (`id_p`),
+  KEY `id_re_idx` (`id_re`),
+  CONSTRAINT `id_p1` FOREIGN KEY (`id_p`) REFERENCES `product` (`id_p`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `id_re1` FOREIGN KEY (`id_re`) REFERENCES `recipe` (`id_re`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role`
+-- Dumping data for table `recipe_product`
 --
 
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'qwerty'),(2,'test'),(3,'qwerty1');
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+LOCK TABLES `recipe_product` WRITE;
+/*!40000 ALTER TABLE `recipe_product` DISABLE KEYS */;
+INSERT INTO `recipe_product` VALUES (1,1);
+/*!40000 ALTER TABLE `recipe_product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

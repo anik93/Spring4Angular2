@@ -16,27 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `role`
+-- Table structure for table `section`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `section`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role` (
-  `id_r` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_r`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+CREATE TABLE `section` (
+  `id_s` int(11) NOT NULL AUTO_INCREMENT,
+  `text` varchar(255) NOT NULL,
+  `id_re` int(11) NOT NULL,
+  PRIMARY KEY (`id_s`),
+  KEY `id_re_idx` (`id_re`),
+  CONSTRAINT `id_re` FOREIGN KEY (`id_re`) REFERENCES `recipe` (`id_re`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role`
+-- Dumping data for table `section`
 --
 
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'qwerty'),(2,'test'),(3,'qwerty1');
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+LOCK TABLES `section` WRITE;
+/*!40000 ALTER TABLE `section` DISABLE KEYS */;
+INSERT INTO `section` VALUES (1,'test',1);
+/*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

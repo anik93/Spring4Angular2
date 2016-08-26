@@ -1,5 +1,6 @@
 package com.packt.cookbook.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ public class UserController {
 	@RequestMapping(value = "register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> register(@RequestBody User register){
 		Map<String, Object> mapForReponse = new HashMap<>();
+		HttpStatus httpStatus = HttpStatus.OK;
 		if(register.getName()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty name");
@@ -70,6 +72,7 @@ public class UserController {
 			boolean success = userService.register(register);
 			if(success){
 				mapForReponse.put("success", success);
+				httpStatus = HttpStatus.CREATED;
 				Runnable task = () -> {
 					mailService.registration(register.getEmail(), register.getName());
 				};
@@ -81,7 +84,7 @@ public class UserController {
 			}
 		}
 		
-		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, httpStatus);
 	}
 	
 	@RequestMapping(value = "logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -113,24 +116,34 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> updateUser(@RequestBody User update){
 		Map<String, Object> mapForReponse = new HashMap<>();
 		if(update != null && update.getName()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty name");
-		} else if(update.getPassword()==null){
-			mapForReponse.put("success", false);
-			mapForReponse.put("error", "empty password");
 		} else if(update.getEmail()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty email");
+		} else if(update.getToken()==null){
+			mapForReponse.put("success", false);
+			mapForReponse.put("error", "empty token");
+		} else if(update.getPassword() != null && update.getPassword().length()<7){
+			mapForReponse.put("success", false);
+			mapForReponse.put("error", "length of password in not valid");
 		} else {
 			User user = new User();
 			user.setToken(update.getToken());
 			user = userService.getUser(user);
 			boolean token = userService.validToken(user);
 			if(user != null && token){
+				update.setTimeToken(LocalDateTime.now());
+				if(update.getPassword()==null)
+					update.setPassword(user.getPassword());
+				if(update.getListOfRole().size()==0)
+					update.setListOfRole(user.getListOfRole());
+				update.setId_u(user.getId_u());
+				update.setLogin(user.getLogin());
 				boolean success = userService.updateUser(update);
 				if(success)
 					mapForReponse.put("success", success);
