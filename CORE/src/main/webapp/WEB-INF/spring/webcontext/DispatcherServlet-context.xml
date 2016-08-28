@@ -53,7 +53,8 @@
 				<value>/orm/Role.hbm.xml</value>
 				<value>/orm/Recipe.hbm.xml</value>
 				<value>/orm/Section.hbm.xml</value>
-				<!--value>/orm/Product.hbm.xml</value-->
+				<value>/orm/Product.hbm.xml</value>
+				<value>/orm/ProductRecipe.hbm.xml</value>
 			</list>
 		</property>
 	</bean>

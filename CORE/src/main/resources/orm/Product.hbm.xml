@@ -1,19 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
 <hibernate-mapping package="com.packt.cookbook.domain">
 
-    <class name="Product" table="product">
+    <class entity-name="product" name="Product" table="product">
     
-        <id name="id_p" type="java.lang.Integer">
-            <column name="id_p" />
+        <id name="id_p" type="java.lang.Integer" column="id_p">
             <generator class="identity" />
         </id>
         
-        <property name="name" type="string">
-            <column name="name" length="255" not-null="true" />
-        </property>
-
+        <property name="name" column="name" type="java.lang.String" not-null="true" length="255"/>
+            
     </class>
     
-</hibernate-mapping>
+</hibernate-mapping> 

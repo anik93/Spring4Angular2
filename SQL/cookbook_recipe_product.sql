@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS `recipe_product`;
 CREATE TABLE `recipe_product` (
   `id_re` int(11) NOT NULL,
   `id_p` int(11) NOT NULL,
+  `quantity` float NOT NULL,
+  `type` varchar(45) NOT NULL,
   KEY `id_p_idx` (`id_p`),
   KEY `id_re_idx` (`id_re`),
   CONSTRAINT `id_p1` FOREIGN KEY (`id_p`) REFERENCES `product` (`id_p`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -38,7 +40,7 @@ CREATE TABLE `recipe_product` (
 
 LOCK TABLES `recipe_product` WRITE;
 /*!40000 ALTER TABLE `recipe_product` DISABLE KEYS */;
-INSERT INTO `recipe_product` VALUES (1,1);
+INSERT INTO `recipe_product` VALUES (1,1,1,'tak'),(1,2,3,'tak'),(1,3,4,'taj'),(1,4,5,'tgf'),(1,5,6,'g'),(2,1,2,'dfas'),(2,3,2,'as');
 /*!40000 ALTER TABLE `recipe_product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-26 17:09:28
+-- Dump completed on 2016-08-28 12:08:29

@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.packt.cookbook.domain">
 
-    <class name="Recipe" table="recipe">
+    <class entity-name="recipe" name="Recipe" table="recipe">
     
         <id name="id_re" type="java.lang.Integer">
             <column name="id_re" />
@@ -13,9 +13,9 @@
         <property name="name" type="string">
             <column name="name" length="255" not-null="true" />
         </property>
-
-		<property name="time" type="java.lang.Integer">
-            <column name="time" not-null="true" />
+        
+        <property name="time" type="java.lang.Integer">
+            <column name="time" length="255" not-null="true" />
         </property>
         
         <property name="level" type="string">
@@ -23,11 +23,15 @@
         </property>
         
         <property name="rating" type="float">
-            <column name="rating" not-null="false"/>
+            <column name="rating" length="255" />
         </property>
         
         <property name="linkPhoto" type="string">
             <column name="linkPhoto" length="255" not-null="true" />
+        </property>
+        
+        <property name="approve" type="boolean">
+            <column name="approve" not-null="true" />
         </property>
         
         <set name="listOfSection" table="section" lazy="false" fetch="select" cascade="all">
@@ -37,14 +41,14 @@
             <one-to-many class="Section" />
         </set>
         
-        <!--set name="listOfProducts" table="recipe_product" lazy="false" fetch="select" cascade="all">
+        <set name="listOfRecipe_Product" table="recipe_product" lazy="false" fetch="select" cascade="all">
             <key>
                 <column name="id_re" not-null="true" />
             </key>
-            <many-to-many entity-name="com.packt.cookbook.domain.Product">
-                <column name="id_p" not-null="true" />
-            </many-to-many>
-        </set-->
+
+            <one-to-many entity-name="productRecipe" />
+        </set>
+
     </class>
     
 </hibernate-mapping>

@@ -29,7 +29,7 @@ CREATE TABLE `section` (
   PRIMARY KEY (`id_s`),
   KEY `id_re_idx` (`id_re`),
   CONSTRAINT `id_re` FOREIGN KEY (`id_re`) REFERENCES `recipe` (`id_re`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `section` (
 
 LOCK TABLES `section` WRITE;
 /*!40000 ALTER TABLE `section` DISABLE KEYS */;
-INSERT INTO `section` VALUES (1,'test',1);
+INSERT INTO `section` VALUES (1,'test',1),(2,'fsz',1),(3,'das',2),(4,'daszzz',2);
 /*!40000 ALTER TABLE `section` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-08-26 17:09:28
+-- Dump completed on 2016-08-28 12:08:30

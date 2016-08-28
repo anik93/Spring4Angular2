@@ -18,6 +18,7 @@ import com.packt.cookbook.repository.RecipeRepository;
 @Repository
 public class RecipeRepositoryImpl implements RecipeRepository{
 	
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(RecipeRepositoryImpl.class);
 	
 	@Autowired
@@ -32,6 +33,7 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 		Criteria cr = session.createCriteria(Recipe.class);
 		List<Recipe> listOfRecipe = new ArrayList<>(0);
 		cr.add(Restrictions.eq("id_re", id_r));
+		cr.add(Restrictions.eq("approve", true));
 		listOfRecipe = cr.list();
 		if(!listOfRecipe.isEmpty())
 			recipe = listOfRecipe.get(0);
@@ -44,12 +46,11 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 		Session session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria cr = session.createCriteria(Recipe.class);
+		cr.add(Restrictions.eq("approve", true));
 		@SuppressWarnings("unchecked")
 		List<Recipe> listOfRecipe = cr.list();
 		session.close();
 		return listOfRecipe;
 	}
-	
-	
 
 }

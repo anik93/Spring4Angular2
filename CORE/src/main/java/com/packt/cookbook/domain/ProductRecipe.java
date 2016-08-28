@@ -2,34 +2,23 @@ package com.packt.cookbook.domain;
 
 import java.io.Serializable;
 
-public class Product implements Serializable{
+public class ProductRecipe implements Serializable{
 
-	private static final long serialVersionUID = 327112233223169566L;
+	private static final long serialVersionUID = -8091870510502051071L;
 
-	private int id_p;
-	
-	private String name;
+	private ProductRecipeMapping id;
 	
 	private float quantity;
 	
 	private String type;
 	
-	public int getId_p() {
-		return id_p;
+	public ProductRecipeMapping getId() {
+	    return id;
 	}
-
-	public void setId_p(int id_p) {
-		this.id_p = id_p;
+	public void setId(ProductRecipeMapping id) {
+	    this.id = id;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public float getQuantity() {
 		return quantity;
 	}
@@ -37,11 +26,10 @@ public class Product implements Serializable{
 	public void setQuantity(float quantity) {
 		this.quantity = quantity;
 	}
-
+	
 	public String getType() {
 		return type;
 	}
-
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -50,7 +38,7 @@ public class Product implements Serializable{
 	public int hashCode() {
 	    final int prime = 31;
 	    int result = 1;
-	    result = prime * result + id_p;
+	    result = prime * result + ((id == null) ? 0 : id.hashCode());
 	    return result;
 	}
 	@Override
@@ -61,8 +49,11 @@ public class Product implements Serializable{
 	        return false;
 	    if (getClass() != obj.getClass())
 	        return false;
-	    Product other = (Product) obj;
-	    if (id_p != other.id_p)
+	    ProductRecipe other = (ProductRecipe) obj;
+	    if (id == null) {
+	        if (other.id != null)
+	            return false;
+	    } else if (!id.equals(other.id))
 	        return false;
 	    return true;
 	}

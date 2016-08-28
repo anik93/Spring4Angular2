@@ -128,9 +128,6 @@ public class UserController {
 		} else if(update.getToken()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty token");
-		} else if(update.getPassword() != null && update.getPassword().length()<7){
-			mapForReponse.put("success", false);
-			mapForReponse.put("error", "length of password in not valid");
 		} else {
 			User user = new User();
 			user.setToken(update.getToken());
