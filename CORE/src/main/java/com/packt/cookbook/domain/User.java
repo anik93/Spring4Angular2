@@ -17,10 +17,18 @@ public class User implements Serializable{
 	
 	private String name;
 	
-	@SuppressWarnings("deprecation")
 	@Length(min=8)
+	@SuppressWarnings("deprecation")
 	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String password;
+	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	private String newPassword;
+	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	private String oldPassword;
 	
 	private String email;
 	
@@ -68,6 +76,22 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+	
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
 	
 	public String getToken() {
 		return token;
@@ -99,5 +123,5 @@ public class User implements Serializable{
 	public void setTimeToken(LocalDateTime timeToken) {
 		this.timeToken = timeToken;
 	}
-	
+
 }

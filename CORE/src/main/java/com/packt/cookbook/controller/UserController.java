@@ -122,9 +122,6 @@ public class UserController {
 		if(update != null && update.getName()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty name");
-		} else if(update.getEmail()==null){
-			mapForReponse.put("success", false);
-			mapForReponse.put("error", "empty email");
 		} else if(update.getToken()==null){
 			mapForReponse.put("success", false);
 			mapForReponse.put("error", "empty token");
@@ -135,10 +132,14 @@ public class UserController {
 			boolean token = userService.validToken(user);
 			if(user != null && token){
 				update.setTimeToken(LocalDateTime.now());
-				if(update.getPassword()==null)
-					update.setPassword(user.getPassword());
-				if(update.getListOfRole().size()==0)
+				
+				if(update.getNewPassword()!=null && update.getOldPassword().equals(user.getPassword()))
+					update.setPassword(update.getNewPassword());
+				if(update.getEmail()==null)
+					update.setEmail(user.getEmail());
+				if(update.getListOfRole().isEmpty())
 					update.setListOfRole(user.getListOfRole());
+				
 				update.setId_u(user.getId_u());
 				update.setLogin(user.getLogin());
 				boolean success = userService.updateUser(update);
