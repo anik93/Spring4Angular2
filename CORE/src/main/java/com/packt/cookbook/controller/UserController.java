@@ -132,23 +132,32 @@ public class UserController {
 			boolean token = userService.validToken(user);
 			if(user != null && token){
 				update.setTimeToken(LocalDateTime.now());
-				
+				boolean updateUser = true;
 				if(update.getNewPassword()!=null && update.getOldPassword().equals(user.getPassword()))
 					update.setPassword(update.getNewPassword());
+				else
+					updateUser = false;
+				if(update.getNewPassword()==null)
+					update.setPassword(user.getPassword());
 				if(update.getEmail()==null)
 					update.setEmail(user.getEmail());
 				if(update.getListOfRole().isEmpty())
 					update.setListOfRole(user.getListOfRole());
-				
 				update.setId_u(user.getId_u());
 				update.setLogin(user.getLogin());
-				boolean success = userService.updateUser(update);
+				boolean success = false;
+				if(updateUser)
+					success = userService.updateUser(update);
+				
 				if(success)
 					mapForReponse.put("success", success);
 				else {
-					mapForReponse.put("access", false);
+					mapForReponse.put("access", true);
 					mapForReponse.put("success", success);
-					mapForReponse.put("error", "not save");
+					if(updateUser)
+						mapForReponse.put("error", "not save");
+					else
+						mapForReponse.put("error", "wrong old password");
 				}
 			} else {
 				if(!token){

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.packt.cookbook.domain.Filter;
 import com.packt.cookbook.domain.Product;
 import com.packt.cookbook.domain.Recipe;
 import com.packt.cookbook.domain.ProductRecipe;
@@ -52,16 +53,21 @@ public class RecipeController {
 	}
 	
 	@RequestMapping(value = "filtr", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Object>> getRecipes(@RequestBody Map<String, List<String>> mapOfFilters){
-		Map<String, Object> mapForReponse = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> getRecipes(@RequestBody Filter filter){
+		Map<String, Object> mapForReponse = new HashMap<>();		
 		
-		if(mapOfFilters.isEmpty()){
-			List<Recipe> listOfRecipe = recipeService.getAllRecipe();
+		if(filter != null && filter.getPage()>0 && filter.getSize()>0 && filter.getListOfFilters().isEmpty()){
+			List<Recipe> listOfRecipe = recipeService.getAllRecipe(filter);
+			mapForReponse.put("counter", listOfRecipe.remove(listOfRecipe.size()-1).getId_re());
 			listOfRecipe.forEach(x -> converRecipeToJson(x));
 			mapForReponse.put("recipes", listOfRecipe);
 			mapForReponse.put("success", true);
-		} else if(!mapOfFilters.isEmpty()){
-			
+		} else if(filter != null && filter.getPage()>0 && filter.getSize()>0 && !filter.getListOfFilters().isEmpty()){
+			List<Recipe> listOfRecipe = recipeService.getAllRecipe(filter);
+			mapForReponse.put("counter", listOfRecipe.remove(listOfRecipe.size()-1).getId_re());
+			listOfRecipe.forEach(x -> converRecipeToJson(x));
+			mapForReponse.put("recipes", listOfRecipe);
+			mapForReponse.put("success", true);
 		} else 
 			mapForReponse.put("success", false);
 

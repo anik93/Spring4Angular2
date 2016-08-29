@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class User implements Serializable{
@@ -36,8 +37,7 @@ public class User implements Serializable{
 	
 	private Boolean login;
 	
-	@SuppressWarnings("deprecation")
-	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	@JsonIgnore
 	private LocalDateTime timeToken;
 	
 	private Set<Role> listOfRole = new HashSet<>();
