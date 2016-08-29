@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.packt.cookbook.domain">
+
+    <class entity-name="productRecipe" name="ProductRecipe" table="recipe_product">
+        <composite-id name="id" class="ProductRecipeMapping">
+	        <key-many-to-one name="recipe" entity-name="recipe" column="id_re" />
+        	<key-many-to-one name="product" entity-name="product" column="id_p" />
+    	</composite-id>
+    	
+    	<property name="quantity" type="float" column="quantity" />
+    	
+    	<property name="type" type="string" column="type" />
+
+    </class>    
+    
+</hibernate-mapping>

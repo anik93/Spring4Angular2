@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 
 	@Override
-	public Boolean register(User register) {
+	public boolean register(User register) {
 		Session session = null;
 		try{
 			session = sessionFactory.openSession();
@@ -57,7 +58,7 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 	
 	@Override
-	public Boolean logout(User logout) {
+	public boolean logout(User logout) {
 		User user = getUser(logout);
 		if(user != null && user.getToken() != null && user.getToken().equals(logout.getToken())){
 			user.setTimeToken(null);
@@ -85,15 +86,18 @@ public class UserRepositoryImpl implements UserRepository{
 			cr.add(Restrictions.eq("id_u", userToFind.getId_u()));		
 		} else if(userToFind.getToken() != null){
 			cr.add(Restrictions.eq("token", userToFind.getToken()));
-		} 
+		} else if(userToFind.getEmail() != null){
+			cr.add(Restrictions.eq("email", userToFind.getEmail()));
+		}
 		listOfUser = cr.list();
 		if(!listOfUser.isEmpty())
 			user = listOfUser.get(0);
+		session.close();
 		return user;
 	}
 	
 	@Override
-	public Boolean updateUser(User test){
+	public boolean updateUser(User test){
 		User user = new User();
 		user.setId_u(test.getId_u());
 		user.setName(test.getName());
@@ -102,12 +106,14 @@ public class UserRepositoryImpl implements UserRepository{
 		user.setToken(test.getToken());
 		user.setLogin(test.getLogin());
 		user.setTimeToken(test.getTimeToken());		
+		user.setListOfRole(test.getListOfRole());
 		Session session = null;
-		try{
+		try{			
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			session.update(user); 
 			session.getTransaction().commit();
+			session.close();
 			return true;
 		}catch(Exception e){
 			session.getTransaction().rollback();
@@ -119,13 +125,27 @@ public class UserRepositoryImpl implements UserRepository{
 	}
 	
 	@Override
-	public Boolean validToken(User userToken) {
+	public boolean validToken(User userToken) {
 		User user = getUser(userToken);
 		if(user != null && userToken.getToken().equals(user.getToken()) && ChronoUnit.HOURS.between(user.getTimeToken(), LocalDateTime.now())<=2){
 			user.setTimeToken(LocalDateTime.now());
 			updateUser(user);
 			return true;
+		} else {
+			user.setTimeToken(null);
+			user.setToken(null);
+			user.setLogin(false);
+			updateUser(user);
+			return false;
 		}
-		return false;
+	}
+
+	@Override
+	public boolean restartPassword(User user) {
+		user.setPassword(RandomStringUtils.random(10));
+		if(updateUser(user))
+			return true;
+		else
+			return false;
 	}
 }

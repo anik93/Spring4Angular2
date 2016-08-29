@@ -5,13 +5,15 @@ import com.packt.cookbook.domain.User;
 public interface UserRepository {
 	User login(User login);
 
-	Boolean register(User register);
+	boolean register(User register);
 
-	Boolean logout(User logout);
+	boolean logout(User logout);
 
 	User getUser(User userToFind);
 
-	Boolean updateUser(User test);
+	boolean updateUser(User test);
 
-	Boolean validToken(User userToken);
+	boolean validToken(User userToken);
+
+	boolean restartPassword(User user);
 }

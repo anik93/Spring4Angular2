@@ -35,7 +35,7 @@
             <column name="timeToken" />
         </property>
      
-        <set name="listOfRole" table="user_role"  inverse="true" lazy="false" fetch="select" cascade="all">
+        <set name="listOfRole" table="user_role" lazy="false" fetch="select" cascade="all">
             <key>
                 <column name="id_u" not-null="true" />
             </key>

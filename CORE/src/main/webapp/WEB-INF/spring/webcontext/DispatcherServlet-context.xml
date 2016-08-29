@@ -29,12 +29,12 @@
 	</bean>
 	
 	<mvc:cors>
-		<mvc:mapping path="/**" />
+		<mvc:mapping path="/**" allowed-methods="GET, PUT, POST"/>
 	</mvc:cors>
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/cookbook" />
+		<property name="url" value="jdbc:mysql://localhost:3306/cookbook?useSSL=false" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 	</bean>
@@ -51,6 +51,10 @@
 			<list>
 				<value>/orm/User.hbm.xml</value>
 				<value>/orm/Role.hbm.xml</value>
+				<value>/orm/Recipe.hbm.xml</value>
+				<value>/orm/Section.hbm.xml</value>
+				<value>/orm/Product.hbm.xml</value>
+				<value>/orm/ProductRecipe.hbm.xml</value>
 			</list>
 		</property>
 	</bean>
@@ -58,8 +62,8 @@
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
-		<property name="username" value="test" />
-		<property name="password" value="test" />
+		<property name="username" value="mycookbook.sup" />
+		<property name="password" value="myCookBook2016" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.transport.protocol">smtp</prop>

@@ -5,15 +5,30 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class User implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1572102918105879025L;
 
 	private Integer id_u;
 	
 	private String name;
 	
+	@Length(min=8)
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String password;
+	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	private String newPassword;
+	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	private String oldPassword;
 	
 	private String email;
 	
@@ -21,6 +36,8 @@ public class User implements Serializable{
 	
 	private Boolean login;
 	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private LocalDateTime timeToken;
 	
 	private Set<Role> listOfRole = new HashSet<>();
@@ -59,6 +76,22 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+	
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
 	
 	public String getToken() {
 		return token;
@@ -90,5 +123,5 @@ public class User implements Serializable{
 	public void setTimeToken(LocalDateTime timeToken) {
 		this.timeToken = timeToken;
 	}
-	
+
 }

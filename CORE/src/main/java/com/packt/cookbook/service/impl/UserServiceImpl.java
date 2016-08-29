@@ -19,12 +19,12 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Boolean register(User register) {
+	public boolean register(User register) {
 		return userRepository.register(register);
 	}
 
 	@Override
-	public Boolean logout(User logout) {
+	public boolean logout(User logout) {
 		return userRepository.logout(logout);
 	}
 
@@ -34,12 +34,17 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public Boolean updateUser(User test) {
+	public boolean updateUser(User test) {
 		return userRepository.updateUser(test);
 	}
 
 	@Override
-	public Boolean validToken(User userToken) {
+	public boolean validToken(User userToken) {
 		return userRepository.validToken(userToken);
+	}
+
+	@Override
+	public boolean restartPassword(User user) {
+		return userRepository.restartPassword(user);
 	}
 }

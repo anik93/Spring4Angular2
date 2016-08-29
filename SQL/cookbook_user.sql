@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win32 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: cookbook
 -- ------------------------------------------------------
--- Server version	5.6.28-log
+-- Server version	5.7.14-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +42,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'test','test','tes','b427a1a1-11d0-496e-8a6b-13d06857d5ae',1,'2016-07-15 20:45:42.403'),(4,'test1','test1','test',NULL,NULL,NULL);
+INSERT INTO `user` VALUES (1,'test','test1234','tesw','2f06bae8-5300-4231-930e-078da96aa4b0',1,'2016-08-27 20:18:55.6'),(4,'test1','test1','test',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-15 20:48:04
+-- Dump completed on 2016-08-28 12:08:30
