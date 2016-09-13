@@ -17,9 +17,9 @@ public class Recipe implements Serializable{
 	
 	private String name;
 	
-	private int time;
+	private float time;
 	
-	private String level;
+	private float level;
 	
 	private Float rating;
 	
@@ -52,19 +52,19 @@ public class Recipe implements Serializable{
 		this.name = name;
 	}
 
-	public int getTime() {
+	public float getTime() {
 		return time;
 	}
 
-	public void setTime(int time) {
+	public void setTime(float time) {
 		this.time = time;
 	}
 
-	public String getLevel() {
+	public float getLevel() {
 		return level;
 	}
 
-	public void setLevel(String level) {
+	public void setLevel(float level) {
 		this.level = level;
 	}
 

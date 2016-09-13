@@ -55,13 +55,14 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 		@SuppressWarnings("deprecation")
 		Criteria cr = session.createCriteria(Recipe.class);
 		cr.add(Restrictions.eq("approve", true));
-		
+
 		if(!filter.getListOfFilters().isEmpty())
 			for(Entry<String, Object> filters: filter.getListOfFilters().entrySet()){
 				if(filters.getKey().equals("products")){
 					List<String> listOfProduct = (List<String>) filters.getValue();
-					cr.createAlias("listOfRecipe_Product.id.product", "productName");
-					cr.add(Restrictions.in("productName.name", listOfProduct));
+					cr.createCriteria("listOfRecipe_Product").createCriteria("id").createCriteria("product").add(Restrictions.eq("product", 1.0f));
+					//cr.createAlias("listOfRecipe_Product", "listPR").createAlias("listPR.id", "idP").createAlias("idP.product", "producrN").add(Restrictions.eqProperty("producrN.name", "produkt1"));
+					//cr.createCriteria("listOfRecipe_Product").createCriteria("id").createCriteria("product").add(Restrictions.eq("name", "produkt1"));
 				}else if(filters.getKey().equals("rating") || filters.getKey().equals("level") || filters.getKey().equals("time")){
 					Map<String, String> mapa = (Map<String, String>) filters.getValue();
 					if(mapa.get("from") != null && mapa.get("to") != null)

@@ -14,11 +14,11 @@
             <column name="name" length="255" not-null="true" />
         </property>
         
-        <property name="time" type="java.lang.Integer">
+        <property name="time" type="float">
             <column name="time" length="255" not-null="true" />
         </property>
         
-        <property name="level" type="string">
+        <property name="level" type="float">
             <column name="level" length="255" not-null="true" />
         </property>
         
