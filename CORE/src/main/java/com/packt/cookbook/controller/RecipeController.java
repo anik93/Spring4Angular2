@@ -52,10 +52,9 @@ public class RecipeController {
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "filtr", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "filter", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> getRecipes(@RequestBody Filter filter){
-		Map<String, Object> mapForReponse = new HashMap<>();		
-		
+		Map<String, Object> mapForReponse = new HashMap<>();
 		if(filter != null && filter.getPage()>0 && filter.getSize()>0 && filter.getListOfFilters().isEmpty()){
 			List<Recipe> listOfRecipe = recipeService.getAllRecipe(filter);
 			mapForReponse.put("counter", listOfRecipe.remove(listOfRecipe.size()-1).getId_re());
@@ -74,8 +73,16 @@ public class RecipeController {
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "autocomplete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> autocomplete(@RequestBody Filter filter){
+		Map<String, Object> mapForReponse = new HashMap<>();
+		mapForReponse.put("listOfName", recipeService.getNameLike(filter.getName()));
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+	}
+	
 	private void converRecipeToJson(Recipe recipe){
-		List<Product> listOfProduct = new LinkedList<>();								
+		List<Product> listOfProduct = new LinkedList<>();			
+		
 		for(ProductRecipe maping:recipe.getListOfRecipe_Product()){
 			Product product = new Product();
 			product.setId_p(maping.getId().getProduct().getId_p());
@@ -87,5 +94,4 @@ public class RecipeController {
 		recipe.setListOfRecipe_Product(null);
 		recipe.setListOfProduct(listOfProduct);
 	}
-	
 }

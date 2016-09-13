@@ -1,11 +1,16 @@
 package com.packt.cookbook.repository.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.packt.cookbook.domain.Filter;
 import com.packt.cookbook.domain.Recipe;
+import com.packt.cookbook.domain.SortType;
 import com.packt.cookbook.repository.RecipeRepository;
 
 @Repository
@@ -32,37 +38,79 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 		Session session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria cr = session.createCriteria(Recipe.class);
-		List<Recipe> listOfRecipe = new ArrayList<>(0);
+		List<Recipe> resault = new ArrayList<>(0);
 		cr.add(Restrictions.eq("id_re", id_r));
 		cr.add(Restrictions.eq("approve", true));
-		listOfRecipe = cr.list();
-		if(!listOfRecipe.isEmpty())
-			recipe = listOfRecipe.get(0);
+		resault = cr.list();
+		if(!resault.isEmpty())
+			recipe = resault.get(0);
 		session.close();
 		return recipe;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Recipe> getAllRecipe(Filter filter) {
 		Session session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria cr = session.createCriteria(Recipe.class);
 		cr.add(Restrictions.eq("approve", true));
+		
 		if(!filter.getListOfFilters().isEmpty())
-			filter.getListOfFilters().entrySet().forEach(x->cr.add(Restrictions.in(x.getKey(), x.getValue())));
-			/*for(Map.Entry<String, List<String>> filters: filter.getListOfFilters().entrySet())
-				cr.add(Restrictions.in(filters.getKey(), filters.getValue()));*/
+			for(Entry<String, Object> filters: filter.getListOfFilters().entrySet()){
+				if(filters.getKey().equals("products")){
+					List<String> listOfProduct = (List<String>) filters.getValue();
+					cr.createAlias("listOfRecipe_Product.id.product", "productName");
+					cr.add(Restrictions.in("productName.name", listOfProduct));
+				}else if(filters.getKey().equals("rating") || filters.getKey().equals("level") || filters.getKey().equals("time")){
+					Map<String, String> mapa = (Map<String, String>) filters.getValue();
+					if(mapa.get("from") != null && mapa.get("to") != null)
+						cr.add(Restrictions.between(filters.getKey(), Float.parseFloat(mapa.get("from")), Float.parseFloat(mapa.get("to"))));
+					else if(mapa.get("to") != null && mapa.get("from") == null)
+						cr.add(Restrictions.lt(filters.getKey(), Float.parseFloat(mapa.get("to"))));
+					else if(mapa.get("from") != null && mapa.get("to") == null)
+						cr.add(Restrictions.gt(filters.getKey(), Float.parseFloat(mapa.get("from"))));
+				} 
+			}
+		if(filter.getName() != null)
+			if(filter.getFuzzy())
+				cr.add(Restrictions.ilike("name", filter.getName(), MatchMode.ANYWHERE));						
+			else
+				cr.add(Restrictions.eq("name", filter.getName()));
+		
+		if(filter.getSort() != null && filter.getSort().equals(SortType.ASC))
+			cr.addOrder(Order.asc("name"));
+		else if(filter.getSort() != null && filter.getSort().equals(SortType.DESC))
+			cr.addOrder(Order.desc("name"));
+		
 		Recipe recipe = new Recipe();
 		recipe.setId_re(cr.list().size());
-		if(filter.getPage()>0 && filter.getSize()>0){
+		
+		if(filter.getPage()>0 && filter.getSize()>9){
 			cr.setFirstResult((filter.getPage() - 1) * filter.getSize());
 			cr.setMaxResults(filter.getSize());
 		}
-		@SuppressWarnings("unchecked")
 		List<Recipe> listOfRecipe = cr.list();
 		session.close();
 		listOfRecipe.add(recipe);
 		return listOfRecipe;
+	}
+
+	@Override
+	public List<String> getNameLike(String name) {
+		Session session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria cr = session.createCriteria(Recipe.class);
+		cr.add(Restrictions.eq("approve", true));
+		cr.add(Restrictions.ilike("name", name+"%"));
+		cr.setMaxResults(10);
+		cr.addOrder(Order.asc("name"));
+		@SuppressWarnings("unchecked")
+		List<Recipe> resault = cr.list();
+		session.close();
+		List<String> listOfName = new LinkedList<>();
+		resault.forEach(x -> listOfName.add(x.getName()));
+		return listOfName;
 	}
 
 }

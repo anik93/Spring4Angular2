@@ -26,4 +26,9 @@ public class RecipeServiceImpl implements RecipeService{
 		return recipeRepository.getAllRecipe(filter);
 	}
 
+	@Override
+	public List<String> getNameLike(String name) {
+		return recipeRepository.getNameLike(name);
+	}
+
 }

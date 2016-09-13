@@ -11,4 +11,6 @@ public interface RecipeService {
 
 	List<Recipe> getAllRecipe(Filter filter);
 
+	List<String> getNameLike(String name);
+
 }
