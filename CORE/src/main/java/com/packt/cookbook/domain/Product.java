@@ -2,6 +2,8 @@ package com.packt.cookbook.domain;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 public class Product implements Serializable{
 
 	private static final long serialVersionUID = 327112233223169566L;
@@ -10,8 +12,12 @@ public class Product implements Serializable{
 	
 	private String name;
 	
-	private float quantity;
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+	private Float quantity;
 	
+	@SuppressWarnings("deprecation")
+	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 	private String type;
 	
 	public int getId_p() {
@@ -30,11 +36,11 @@ public class Product implements Serializable{
 		this.name = name;
 	}
 
-	public float getQuantity() {
+	public Float getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(float quantity) {
+	public void setQuantity(Float quantity) {
 		this.quantity = quantity;
 	}
 

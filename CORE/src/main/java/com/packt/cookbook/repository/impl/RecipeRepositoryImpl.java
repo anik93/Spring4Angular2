@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.packt.cookbook.domain.Filter;
+import com.packt.cookbook.domain.Product;
 import com.packt.cookbook.domain.Recipe;
 import com.packt.cookbook.domain.SortType;
 import com.packt.cookbook.repository.RecipeRepository;
@@ -60,7 +62,7 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 			for(Entry<String, Object> filters: filter.getListOfFilters().entrySet()){
 				if(filters.getKey().equals("products")){
 					List<String> listOfProduct = (List<String>) filters.getValue();
-					cr.createCriteria("listOfRecipe_Product").createCriteria("id").createCriteria("product").add(Restrictions.eq("product", 1.0f));
+					//cr.createCriteria("listOfRecipe_Product").createCriteria("id").createCriteria("product").add(Restrictions.eq("product", 1.0f));
 					//cr.createAlias("listOfRecipe_Product", "listPR").createAlias("listPR.id", "idP").createAlias("idP.product", "producrN").add(Restrictions.eqProperty("producrN.name", "produkt1"));
 					//cr.createCriteria("listOfRecipe_Product").createCriteria("id").createCriteria("product").add(Restrictions.eq("name", "produkt1"));
 				}else if(filters.getKey().equals("rating") || filters.getKey().equals("level") || filters.getKey().equals("time")){
@@ -112,6 +114,15 @@ public class RecipeRepositoryImpl implements RecipeRepository{
 		List<String> listOfName = new LinkedList<>();
 		resault.forEach(x -> listOfName.add(x.getName()));
 		return listOfName;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> getAllProducts() {
+		Session session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria cr = session.createCriteria(Product.class);
+		return ((List<Product>)cr.list());
 	}
 
 }

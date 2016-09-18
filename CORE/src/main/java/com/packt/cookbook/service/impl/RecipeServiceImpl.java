@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.packt.cookbook.domain.Filter;
+import com.packt.cookbook.domain.Product;
 import com.packt.cookbook.domain.Recipe;
 import com.packt.cookbook.repository.RecipeRepository;
 import com.packt.cookbook.service.RecipeService;
@@ -29,6 +30,11 @@ public class RecipeServiceImpl implements RecipeService{
 	@Override
 	public List<String> getNameLike(String name) {
 		return recipeRepository.getNameLike(name);
+	}
+
+	@Override
+	public List<Product> getAllProducts() {
+		return recipeRepository.getAllProducts();
 	}
 
 }

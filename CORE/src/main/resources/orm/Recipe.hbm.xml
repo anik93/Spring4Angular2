@@ -41,7 +41,7 @@
             <one-to-many class="Section" />
         </set>
         
-        <set name="listOfRecipe_Product" table="recipe_product" lazy="false" fetch="select" cascade="all">
+        <set name="listOfRecipe_Product" table="recipe_product" lazy="false" fetch="select" cascade="all" access="property">
             <key>
                 <column name="id_re" not-null="true" />
             </key>

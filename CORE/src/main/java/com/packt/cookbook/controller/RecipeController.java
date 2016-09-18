@@ -80,6 +80,13 @@ public class RecipeController {
 		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "products", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> getProducts(){
+		Map<String, Object> mapForReponse = new HashMap<>();
+		mapForReponse.put("listOfProducts", recipeService.getAllProducts());
+		return new ResponseEntity<Map<String, Object>>(mapForReponse, HttpStatus.OK);
+	}
+	
 	private void converRecipeToJson(Recipe recipe){
 		List<Product> listOfProduct = new LinkedList<>();			
 		
